@@ -1,36 +1,14 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# note-taker-ui
+Frontend for note taker app. Backend code can be found [here](https://github.com/AnonymousRandomPerson/note-taker-server). The deployed app is accessed [here](https://note-taker-ui.fly.dev/).
 
-## Getting Started
+## Running locally
+1. Run `npm install` to download dependencies.
+2. Run `npm run dev` to start the app.
+3. Go to http://localhost:3001 in the browser to see the web UI.
 
-First, run the development server:
+By default, the UI reaches out to the deployed backend at https://note-taker-server.fly.dev. To use a locally run backend instead, start the backend server and database, then set the environment variable `SERVER_HOST` to http://localhost:3000.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Tests can be run with `npm run test`.
 
-Open [http://localhost:3001](http://localhost:3001) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Notes
+See the [backend README](https://github.com/AnonymousRandomPerson/note-taker-server/blob/main/README.md#implementation) for implementation details, challenges, and potential changes.
