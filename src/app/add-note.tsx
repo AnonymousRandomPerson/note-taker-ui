@@ -17,13 +17,14 @@ export default function AddNote() {
 
   return (
     <>
-    <div>
-      <button onClick={handleAddNote} disabled={addingNote}>Add note</button>
-    </div>
-    <br/>
-    {
-      addingNote && <UpdateNote onClose={onClose} onConfirm={addNote} initNoteContents=''/>
-    }
+      <div>
+        <button onClick={handleAddNote} disabled={addingNote}>Add note</button>
+      </div>
+      <br/>
+      {
+        addingNote && <UpdateNote onClose={onClose} onConfirm={addNote} initNoteContents=''/>
+      }
+      <br/>
     </>
   );
 }

@@ -12,4 +12,9 @@
       margin: 0 0.25em;
     }
   }
+
+  .contents {
+    white-space: pre-wrap;
+  }
 }
+

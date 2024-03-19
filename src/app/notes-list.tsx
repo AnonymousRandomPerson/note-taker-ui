@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './notes-list.module.css';
-import React, {useState} from 'react';
+import {ChangeEvent, useState} from 'react';
 import {Note} from '@/app/models';
 import UpdateNote from '@/app/update-note';
 import {deleteNote, updateNote} from '@/app/notes.service';
@@ -13,6 +13,12 @@ interface NotesListProps {
 
 export default function NotesList({ notes }: NotesListProps) {
   const [editedNote, setEditedNote] = useState(-1);
+  const [searchValue, setSearchValue] = useState('');
+  const filteredNotes = notes.filter(note => !searchValue || note.contents.toLowerCase().includes(searchValue.toLowerCase()));
+
+  function onSearchChanged(event: ChangeEvent<HTMLInputElement>) {
+    setSearchValue(event.target.value);
+  }
 
   function onEditClicked(noteId: number) {
     setEditedNote(noteId);
@@ -33,24 +39,37 @@ export default function NotesList({ notes }: NotesListProps) {
   }
 
   if (notes.length) {
-    return notes.map(note => {
-      if (note.id === editedNote) {
-        return <UpdateNote key={note.id} onClose={onEditClosed} onConfirm={onEditConfirmed} initNoteContents={note.contents}/>
-      } else {
-        return (
-          <div className={styles.note} key={note.id} data-testid={`note-${note.id}`}>
-            <p>{note.contents}</p>
-            <div className={styles.buttons}>
-              <button onClick={() => onEditClicked(note.id)} className={styles.button} data-testid={`edit-${note.id}`}>Edit</button>
-              <button onClick={() => onDeleteClicked(note.id)} className={styles.button} data-testid={`delete-${note.id}`}>Delete</button>
+    let noteList;
+    if (filteredNotes.length) {
+      noteList = filteredNotes.map(note => {
+        if (note.id === editedNote) {
+          return <UpdateNote key={note.id} onClose={onEditClosed} onConfirm={onEditConfirmed} initNoteContents={note.contents}/>
+        } else {
+          return (
+            <div className={styles.note} key={note.id} data-testid={`note-${note.id}`}>
+              <p className={styles.contents}>{note.contents}</p>
+              <div className={styles.buttons}>
+                <button onClick={() => onEditClicked(note.id)} className={styles.button} data-testid={`edit-${note.id}`}>Edit</button>
+                <button onClick={() => onDeleteClicked(note.id)} className={styles.button} data-testid={`delete-${note.id}`}>Delete</button>
+              </div>
             </div>
-          </div>
-        )
-      }
-    });
-  } else {
+          )
+        }
+      })
+    } else {
+      noteList = <p data-testid='empty-search-message'>No notes match your search.</p>
+    }
     return (
-      <p data-testid='empty-message'>You have no notes. Click &quot;Add note&quot; to add a note.</p>
-    );
+      <>
+        <span>
+          Search:&nbsp;
+          <input type='text' onChange={onSearchChanged} data-testid={'search'}/>
+        </span>
+        <br/>
+        {noteList}
+      </>
+    )
+  } else {
+    return <p data-testid='empty-message'>You have no notes. Click &quot;Add note&quot; to add a note.</p>
   }
 }

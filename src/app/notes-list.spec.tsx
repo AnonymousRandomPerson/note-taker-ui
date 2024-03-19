@@ -27,12 +27,14 @@ describe('NotesList', () => {
     render(<NotesList notes={[]}/>);
 
     expect(screen.queryByTestId('empty-message')).toBeInTheDocument();
+    expect(screen.queryByTestId('search')).not.toBeInTheDocument();
   });
 
   it('should render notes when there are notes', () => {
     render(<NotesList notes={NOTES}/>);
 
     expect(screen.queryByTestId('empty-message')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('search')).toBeInTheDocument();
     const note1 = screen.queryByTestId('note-1');
     expect(note1).toBeInTheDocument();
     expect(note1).toHaveTextContent('Note 1');
@@ -87,5 +89,43 @@ describe('NotesList', () => {
 
     expect(deleteNote).toHaveBeenCalledWith(1);
     await waitFor(() => expect(revalidatePathAction).toHaveBeenCalledWith('/'));
+  });
+
+  describe('search', () => {
+    it('should filter notes based on search query', () => {
+      render(<NotesList notes={NOTES}/>);
+      fireEvent.change(screen.getByTestId('search'), { target: { value: '1' }});
+
+      expect(screen.queryByTestId('note-1')).toBeInTheDocument();
+      expect(screen.queryByTestId('note-2')).not.toBeInTheDocument();
+    });
+
+    it('should display all notes when search query is cleared', () => {
+      render(<NotesList notes={NOTES}/>);
+      fireEvent.change(screen.getByTestId('search'), { target: { value: '1' }});
+      fireEvent.change(screen.getByTestId('search'), { target: { value: '' }});
+
+      expect(screen.queryByTestId('note-1')).toBeInTheDocument();
+      expect(screen.queryByTestId('note-2')).toBeInTheDocument();
+    });
+
+    it('should display empty search message when search has no matches', () => {
+      render(<NotesList notes={NOTES}/>);
+      const search = screen.getByTestId('search');
+      fireEvent.change(search, { target: { value: '5' }});
+
+      expect(search).toBeInTheDocument();
+      expect(screen.queryByTestId('empty-search-message')).toBeInTheDocument();
+      expect(screen.queryByTestId('note-1')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('note-2')).not.toBeInTheDocument();
+    });
+
+    it('should filter case-insensitive', () => {
+      render(<NotesList notes={NOTES}/>);
+      fireEvent.change(screen.getByTestId('search'), { target: { value: 'note' }});
+
+      expect(screen.queryByTestId('note-1')).toBeInTheDocument();
+      expect(screen.queryByTestId('note-2')).toBeInTheDocument();
+    });
   });
 });
