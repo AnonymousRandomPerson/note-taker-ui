@@ -6,7 +6,7 @@ Frontend for note taker app. Backend code can be found [here](https://github.com
 2. Run `npm run dev` to start the app.
 3. Go to http://localhost:3001 in the browser to see the web UI.
 
-By default, the UI reaches out to the deployed backend at https://note-taker-server.fly.dev. To use a locally run backend instead, start the backend server and database, then set the environment variable `SERVER_HOST` to http://localhost:3000.
+By default, the UI reaches out to the deployed backend at https://note-taker-server.fly.dev. To use a locally run backend instead, start the backend server and database, then set the environment variable `SERVER_HOST` in the UI to http://localhost:3000.
 
 Tests can be run with `npm run test`.
 
