@@ -4,7 +4,8 @@ import styles from './notes-list.module.css';
 import React, {useState} from 'react';
 import {Note} from '@/app/models';
 import UpdateNote from '@/app/update-note';
-import {updateNote} from '@/app/notes.service';
+import {deleteNote, updateNote} from '@/app/notes.service';
+import {revalidatePathAction} from '@/app/actions';
 
 interface NotesListProps {
   notes: Note[];
@@ -18,6 +19,9 @@ export default function NotesList({ notes }: NotesListProps) {
   }
 
   async function onDeleteClicked(noteId: number) {
+    await deleteNote(noteId);
+    // Reload the note list after deleting the note.
+    await revalidatePathAction('/');
   }
 
   function onEditClosed() {

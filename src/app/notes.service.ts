@@ -9,11 +9,15 @@ export async function getNotes(): Promise<Note[]> {
 }
 
 export async function addNote(contents: string): Promise<void> {
-  await fetchUpdateNotes('POST', `${SERVER_HOST}`, contents);
+  await fetchWithCors('POST', `${SERVER_HOST}`, JSON.stringify({ contents }));
 }
 
 export async function updateNote(noteId: number, contents: string): Promise<void> {
-  await fetchUpdateNotes('PUT', `${SERVER_HOST}/${noteId}`, contents);
+  await fetchWithCors('PUT', `${SERVER_HOST}/${noteId}`, JSON.stringify({ contents }));
+}
+
+export async function deleteNote(noteId: number): Promise<void> {
+  await fetchWithCors('DELETE', `${SERVER_HOST}/${noteId}`);
 }
 
 function validateResponse(res: Response) {
@@ -22,10 +26,10 @@ function validateResponse(res: Response) {
   }
 }
 
-async function fetchUpdateNotes(method: string, url: string, contents: string): Promise<void> {
+async function fetchWithCors(method: string, url: string, body?: string): Promise<void> {
   const res = await fetch(url, {
     method: method,
-    body: JSON.stringify({ contents }),
+    body: body,
     mode: 'cors',
     headers: {
       'Access-Control-Allow-Origin': SERVER_HOST,

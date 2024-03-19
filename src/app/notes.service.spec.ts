@@ -1,4 +1,4 @@
-import {addNote, getNotes, SERVER_HOST, updateNote} from '@/app/notes.service';
+import {addNote, deleteNote, getNotes, SERVER_HOST, updateNote} from '@/app/notes.service';
 
 describe('NotesService', () => {
 
@@ -92,6 +92,40 @@ describe('NotesService', () => {
 
       try {
         await updateNote(1, '');
+        fail('Expected error.');
+      } catch (e) {
+        expect((e as Error).message).toEqual('Response failed with status 400.');
+      }
+    });
+  });
+
+  describe('deleteNote', () => {
+    it('should DELETE note', async () => {
+      global.fetch = jest.fn().mockReturnValue(Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve()
+      }));
+
+      await deleteNote(1);
+
+      expect(fetch).toHaveBeenCalledWith(`${SERVER_HOST}/1`, {
+        method: 'DELETE',
+        mode: 'cors',
+        headers: {
+          'Access-Control-Allow-Origin': SERVER_HOST,
+          'Content-Type': 'application/json'
+        }
+      });
+    });
+
+    it('should throw error when request fails', async () => {
+      global.fetch = jest.fn().mockReturnValue(Promise.resolve({
+        ok: false,
+        status: 400
+      }));
+
+      try {
+        await deleteNote(1);
         fail('Expected error.');
       } catch (e) {
         expect((e as Error).message).toEqual('Response failed with status 400.');

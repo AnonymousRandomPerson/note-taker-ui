@@ -1,5 +1,4 @@
 export interface Note {
   id: number,
-  contents: string,
-  editing?: boolean,
+  contents: string
 }

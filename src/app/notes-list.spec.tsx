@@ -1,13 +1,14 @@
 import '@testing-library/jest-dom'
-import {act, fireEvent, render, screen} from '@testing-library/react';
+import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import NotesList from '@/app/notes-list';
 import UpdateNote, {UpdateNoteProps} from '@/app/update-note';
 import {Mock} from 'jest-mock';
-import AddNote from '@/app/add-note';
-import {addNote, updateNote} from '@/app/notes.service';
+import {deleteNote, updateNote} from '@/app/notes.service';
+import {revalidatePathAction} from '@/app/actions';
 
 jest.mock('./notes.service');
 jest.mock('./update-note');
+jest.mock('./actions');
 
 describe('NotesList', () => {
 
@@ -66,7 +67,7 @@ describe('NotesList', () => {
     expect(screen.queryByTestId('note-2')).toBeInTheDocument();
   });
 
-  it('should call updateNotes after UpdateNote is confirmed', async () => {
+  it('should call updateNote after UpdateNote is confirmed', async () => {
     (updateNote as Mock).mockImplementation(() => Promise.resolve());
     render(<NotesList notes={NOTES}/>);
 
@@ -76,5 +77,15 @@ describe('NotesList', () => {
     await onConfirm('Note new');
 
     expect(updateNote).toHaveBeenCalledWith(1, 'Note new');
+  });
+
+  it('should call deleteNote when Delete is clicked', async () => {
+    (deleteNote as Mock).mockImplementation(() => Promise.resolve());
+    render(<NotesList notes={NOTES}/>);
+
+    fireEvent.click(screen.getByTestId('delete-1'));
+
+    expect(deleteNote).toHaveBeenCalledWith(1);
+    await waitFor(() => expect(revalidatePathAction).toHaveBeenCalledWith('/'));
   });
 });

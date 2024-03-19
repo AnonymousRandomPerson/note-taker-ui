@@ -33,7 +33,7 @@ export default function UpdateNote({ onClose, onConfirm, initNoteContents }: Upd
       setConfirmingNote(false);
       onClose();
       // Reload the note list after confirming the note.
-      revalidatePathAction('/')
+      await revalidatePathAction('/');
     } catch (e) {
       setConfirmingNote(false);
       throw e;
