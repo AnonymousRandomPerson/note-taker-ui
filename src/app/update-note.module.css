@@ -4,3 +4,12 @@
   font-size: 0.7em;
   min-height: 1.25em;
 }
+
+.input {
+  width: 30em;
+  height: 10em;
+}
+
+.button {
+  margin: 0 0.25em;
+}
